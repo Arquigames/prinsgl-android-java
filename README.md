@@ -3,6 +3,7 @@ Librería OpenGL para android-java
 
 Esta librería que trabaja sobre OpenGL para android java está basado en la librería gráfica THREEJS .
 Vi la necesidad de migrar la librería a JAVA pero no fue posible todo debido a la complejidad pero muchas cosas es posible trabajar.
+Este es un aporte libre a la comunidad, cualquier sugerencia estaré pendiente.
 
 El paquete principal reside en com.arquigames.prinsgl.
 
@@ -12,3 +13,5 @@ importación/exportación de threejs para blender con limitaciones. Ustedes pued
 luego cargarlo en esta librería.
 
 Existe una prueba en el paquete test_app que pueden ejecutarlo si tienen conocimientos sobre la generación de apk en android studio.
+
+Cabe recalcar que existe variaciones de la lógica del código de threejs para esta librería, por lo que al comparar linea por línea y lo que hace esto, de todo el código con la librería threejs existirán variaciones.
