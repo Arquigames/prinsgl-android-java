@@ -107,4 +107,9 @@ public class GLUniform implements IUniform {
         //TODO
         this.value = null;
     }
+
+    @Override
+    public GLUniform clone() throws CloneNotSupportedException {
+        throw new CloneNotSupportedException("cannot clone GLUniform");
+    }
 }

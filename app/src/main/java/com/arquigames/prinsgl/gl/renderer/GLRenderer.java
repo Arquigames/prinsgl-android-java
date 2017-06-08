@@ -33,7 +33,7 @@ import java.util.Collections;
 /**
  * Created by usuario on 07/08/2016.
  */
-public class GLRenderer {
+public class GLRenderer implements Cloneable{
     public static boolean DEBUG = false;
     private Frustum frustum;
     private Matrix4 projectionScreenMatrix;
@@ -85,6 +85,11 @@ public class GLRenderer {
 
         this.setGlCapabilities(new GLCapabilities());
 
+    }
+
+    @Override
+    public GLRenderer clone() throws CloneNotSupportedException{
+        throw new CloneNotSupportedException("cannot clone GLRenderer");
     }
     public void loadCapabilities(){
         this.glCapabilities.init();
@@ -187,7 +192,7 @@ public class GLRenderer {
                 if(indices!=null)this.glState.setLineWidth(this.getPixelRatio() * mat.getLineWidth());
             }else{
                 //TODO
-                //indices=null;
+                //shortIndices=null;
             }
 
             int dataCount = 0;
@@ -335,7 +340,7 @@ public class GLRenderer {
         BufferAttribute bufferAttribute;
         while(iteratorKeys.hasNext()){
             key = iteratorKeys.next();
-            if(key.equals("indices"))continue;
+            if(key.equals("shortIndices"))continue;
             bufferAttribute = (BufferAttribute) geometry.getBuffers().get(key);
             if(bufferAttribute!=null){
                 glAttributeProgram = mat.getGlProgram().getAttribute(key);

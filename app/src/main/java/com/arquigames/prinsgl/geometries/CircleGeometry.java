@@ -34,6 +34,7 @@ public class CircleGeometry extends Geometry{
         }
         return this;
     }
+    @Override
     public PlaneGeometry clone(){
         PlaneGeometry geometry = new PlaneGeometry();
         geometry.copy(this);

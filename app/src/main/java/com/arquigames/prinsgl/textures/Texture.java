@@ -13,7 +13,7 @@ import java.nio.Buffer;
 /**
  * Created by usuario on 12/07/2016.
  */
-public class Texture {
+public class Texture implements Cloneable{
     protected String uuid = "";
     protected String name="";
     protected String sourceFile = "";
@@ -129,6 +129,7 @@ public class Texture {
             this.version = 0;
         }
     }
+    @Override
     public Texture clone(){
         Texture t = new Texture();
         t.copy(this);

@@ -4,7 +4,7 @@ package com.arquigames.prinsgl.gl.renderer;
 /**
  * Created by usuario on 08/08/2016.
  */
-public class RenderGroup {
+public class RenderGroup implements Cloneable{
 
     private int start = 0;
     private int count = 0;
@@ -20,6 +20,7 @@ public class RenderGroup {
     public String toString(){
         return "RenderGroup[start="+this.start+",count="+this.count+",materialIndex="+this.materialIndex+"]";
     }
+    @Override
     public RenderGroup clone(){
         return new RenderGroup(this.start,this.count,this.materialIndex);
     }
@@ -54,5 +55,6 @@ public class RenderGroup {
     public void setMaterialIndex(int materialIndex) {
         this.materialIndex = materialIndex;
     }
+
 
 }

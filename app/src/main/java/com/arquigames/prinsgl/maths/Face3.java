@@ -3,10 +3,10 @@ package com.arquigames.prinsgl.maths;
 import com.arquigames.prinsgl.maths.vectors.Vector2;
 import com.arquigames.prinsgl.maths.vectors.Vector3;
 
-public class Face3{
-	private short indexA=0;
-	private short indexB=0;
-	private short indexC=0;
+public class Face3 implements Cloneable{
+	private int indexA=0;
+	private int indexB=0;
+	private int indexC=0;
 
 	private int materialIndex = 0;
 
@@ -24,49 +24,49 @@ public class Face3{
 
 
 	public Face3(){
-		this((short)0,(short)0,(short)0);
+		this((int)0,(int)0,(int)0);
 
 	}
-	public Face3(short _a,short _b,short _c){
+	public Face3(int _a,int _b,int _c){
 		this.indexA = _a;
 		this.indexB = _b;
 		this.indexC = _c;
 
 	}
-	public Face3(short _a,short _b,short _c,int _matIndex){
+	public Face3(int _a,int _b,int _c,int _matIndex){
 		this(_a,_b,_c);
 		this.materialIndex = _matIndex;
 	} 
-	public Face3(short _a,short _b,short _c,int _matIndex,Vector2 uvA,Vector2 uvB,Vector2 uvC){
+	public Face3(int _a,int _b,int _c,int _matIndex,Vector2 uvA,Vector2 uvB,Vector2 uvC){
 		this(_a,_b,_c,_matIndex);
 		this.uvA = uvA;
 		this.uvB = uvB;
 		this.uvC = uvC;  
 	} 
-	public Face3(short _a,short _b,short _c,int _matIndex,Color cA,Color cB,Color cC){
+	public Face3(int _a,int _b,int _c,int _matIndex,Color cA,Color cB,Color cC){
 		this(_a,_b,_c,_matIndex); 
 		
 		this.colorA = cA;
 		this.colorB = cB;
 		this.colorC = cC;
 	} 
-	public Face3(short _a, short _b, short _c, int _matIndex, Vector3 nA, Vector3 nB, Vector3 nC){
+	public Face3(int _a, int _b, int _c, int _matIndex, Vector3 nA, Vector3 nB, Vector3 nC){
 		this(_a,_b,_c,_matIndex); 
 		
 		this.normalA = nA;
 		this.normalB = nB;
 		this.normalC = nC;
 	} 
-	public Face3(short _a,short _b,short _c,int _matIndex,Vector3 n){
+	public Face3(int _a,int _b,int _c,int _matIndex,Vector3 n){
 		this(_a,_b,_c,_matIndex);  
 		this.normalA = n.clone();
 		this.normalB = n.clone();
 		this.normalC = n.clone();
 	}
 	public Face3(
-			short a,
-			short b,
-			short c,
+			int a,
+			int b,
+			int c,
 			int materialIndex,
 			Vector3 nA,
 			Vector3 nB,
@@ -87,9 +87,9 @@ public class Face3{
 		this.normalC = nC;
 	}
 	public Face3(
-			short a,
-			short b,
-			short c,
+			int a,
+			int b,
+			int c,
 			int materialIndex,
 			Vector3 nA,
 			Vector3 nB,
@@ -109,9 +109,9 @@ public class Face3{
 		this.normalC = nC;
 	}
 	public Face3(
-			short a,
-			short b,
-			short c,
+			int a,
+			int b,
+			int c,
 			int materialIndex,
 			Vector3 nA,
 			Vector3 nB,
@@ -138,9 +138,9 @@ public class Face3{
 		this.uvC = uvC;
 	}
 	public Face3(
-		short _a,
-		short _b,
-		short _c,
+		int _a,
+		int _b,
+		int _c,
 		int _matIndex,
 		Vector3 n,
 		Vector2 uvA,
@@ -166,13 +166,13 @@ public class Face3{
 		}
 		return null;
 	}
-	public void setIndexA(short val){
+	public void setIndexA(int val){
 		this.indexA = val;
 	}
-	public void setIndexB(short val){
+	public void setIndexB(int val){
 		this.indexB = val;
 	}
-	public void setIndexC(short val){
+	public void setIndexC(int val){
 		this.indexC = val;
 	}
 	public void setNormalA(Vector3 val){
@@ -275,6 +275,7 @@ public class Face3{
 		this.normalC = face3.getNormalC()!=null ? face3.getNormalC().clone(): null;
 		return this;
 	}
+	@Override
 	public Face3 clone(){
 		Face3 face3 = new Face3();
 		face3.copy(this);
@@ -299,13 +300,13 @@ public class Face3{
 	public Vector2 getUvC(){
 		return this.uvC;
 	}
-	public short getIndexA(){
+	public int getIndexA(){
 		return this.indexA;
 	}
-	public short getIndexB(){
+	public int getIndexB(){
 		return this.indexB;
 	}
-	public short getIndexC(){
+	public int getIndexC(){
 		return this.indexC;
 	}
 	public int getMaterialIndex(){

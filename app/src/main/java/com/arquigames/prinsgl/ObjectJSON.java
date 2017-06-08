@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * Created by usuario on 12/07/2016.
  */
-public class ObjectJSON {
+public class ObjectJSON implements Cloneable {
     private final Map<String,Object> values;
     public ObjectJSON(){
         this.values = new HashMap<String,Object>();
@@ -20,6 +20,7 @@ public class ObjectJSON {
     public int size(){
         return this.values.size();
     }
+    @Override
     public ObjectJSON clone(){
         ObjectJSON objectJSON = new ObjectJSON();
         objectJSON.copy(this);

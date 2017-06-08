@@ -1,6 +1,7 @@
 package com.arquigames.prinsgl;
 
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.arquigames.prinsgl.geometries.Geometry;
@@ -20,6 +21,7 @@ import java.util.LinkedList;
  */
 public class GeometryUtils {
     private static String TAG = "GeometryUtils";
+    public static boolean ECHO_STEP = false;
     public static void makeBuffersFromFace3(Geometry geometry) {
         java.util.LinkedList<Vector3> vertices = geometry.getVertices();
         java.util.LinkedList<Face3> faces = geometry.getFaces();
@@ -34,7 +36,6 @@ public class GeometryUtils {
         int _verticesCount      = 0;
         int _uvsCount           = 0;
         int _colorsCount        = 0;
-        int _indicesCount       = 0;
         int _normalsCount       = 0;
 
         float[] _vertices   = null;
@@ -159,29 +160,27 @@ public class GeometryUtils {
         }
         BufferAttribute bufferAttribute;
         if(_vertices!=null && _vertices.length>0){
-            Log.e(TAG,"_vertices.length = "+_vertices.length);
-             bufferAttribute = new BufferAttribute(_vertices,3);
-            if(GLRenderer.DEBUG){
-                Log.e(TAG,"Make Vertices = "+Util.print(bufferAttribute.getFloatArray()));
-            }
+            if(GeometryUtils.ECHO_STEP)Log.e(TAG,"_vertices.length = "+_vertices.length);
+            bufferAttribute = new BufferAttribute(_vertices,3);
+            if(GeometryUtils.ECHO_STEP)Log.e(TAG,"Make Vertices = "+Util.print(bufferAttribute.getFloatArray()));
             geometry.getBuffers().put("position",bufferAttribute);
         }else{
             geometry.getBuffers().remove("position");
         }
         if(_uvs!=null && _uvs.length>0){
-             bufferAttribute = new BufferAttribute(_uvs,2);
+            bufferAttribute = new BufferAttribute(_uvs,2);
             geometry.getBuffers().put("uv",bufferAttribute);
         }else{
             geometry.getBuffers().remove("uv");
         }
         if(_colors!=null && _colors.length>0){
-             bufferAttribute = new BufferAttribute(_colors,3);
+            bufferAttribute = new BufferAttribute(_colors,3);
             geometry.getBuffers().put("color",bufferAttribute);
         }else{
             geometry.getBuffers().remove("color");
         }
         if(_normals!=null && _normals.length>0){
-             bufferAttribute = new BufferAttribute(_normals,3);
+            bufferAttribute = new BufferAttribute(_normals,3);
             geometry.getBuffers().put("normal",bufferAttribute);
         }else{
             geometry.getBuffers().remove("normal");
@@ -204,71 +203,136 @@ public class GeometryUtils {
 
     }
     public static void makeWireframeAttribute(Geometry geometry){
-        //ONLY FOR ONE GEOMETRY AND ONE MATERIAL WITH TYPE GL_TRIANGLES
         BufferAttribute wireframe = null;
         wireframe = (BufferAttribute) geometry.getBuffers().get("wireframe");
         if(wireframe==null){
 
             BufferAttribute indices = (BufferAttribute)geometry.getBuffers().get("indices");
-            short[] _wireframe = null;
-            int _wireframeCount = 0;
-            java.util.LinkedList<Short> newIndices = null;
-            if(indices!=null && indices.getShortArray().length>0){
-                short[] _indices = indices.getShortArray();
-                short indexA,indexB,indexC;
+            if(indices==null)return;
 
-                newIndices = new java.util.LinkedList<Short>();
+            if(indices.isIntType()){
+                int[] _wireframe = null;
+                int _wireframeCount = 0;
+                java.util.LinkedList<Integer> newIndices = null;
+                if(indices.getShortArray().length>0){
+                    int[] _indices = indices.getIntArray();
+                    int indexA,indexB,indexC;
 
-                android.util.SparseArray<java.util.LinkedList<Short>> edges =
-                        new android.util.SparseArray<java.util.LinkedList<Short>>();
+                    newIndices = new java.util.LinkedList<>();
 
-                for(int i=0,length = _indices.length;i<length;i +=3){
-                    indexA = _indices[i];
-                    indexB = _indices[i+1];
-                    indexC = _indices[i+2];
-                    if(GeometryUtils.checkEdgesFromIndices(edges,indexA,indexB)){
-                        newIndices.add(indexA);
-                        newIndices.add(indexB);
+                    android.util.SparseArray<java.util.LinkedList<Integer>> edges =
+                            new android.util.SparseArray<>();
+
+                    for(int i=0,length = _indices.length;i<length;i +=3){
+                        indexA = _indices[i];
+                        indexB = _indices[i+1];
+                        indexC = _indices[i+2];
+                        if(GeometryUtils.checkEdgesFromIndices(edges,indexA,indexB)){
+                            newIndices.add(indexA);
+                            newIndices.add(indexB);
+                        }
+                        if(GeometryUtils.checkEdgesFromIndices(edges,indexB,indexC)){
+                            newIndices.add(indexB);
+                            newIndices.add(indexC);
+                        }
+                        if(GeometryUtils.checkEdgesFromIndices(edges,indexC,indexA)){
+                            newIndices.add(indexC);
+                            newIndices.add(indexA);
+                        }
                     }
-                    if(GeometryUtils.checkEdgesFromIndices(edges,indexB,indexC)){
-                        newIndices.add(indexB);
-                        newIndices.add(indexC);
+                }else{
+
+                    BufferAttribute position = (BufferAttribute)geometry.getBuffers().get("position");
+                    int b,c;
+                    if(position!=null && position.getFloatArray().length>0){
+                        newIndices = new java.util.LinkedList<>();
+                        for ( int i = 0, l = ( position.getFloatArray().length / 3 - 1); i < l; i += 3 ) {
+
+                            b = i + 1;
+                            c = i + 2;
+
+                            newIndices.add(i);//a
+                            newIndices.add(b);
+                            newIndices.add(b);
+                            newIndices.add(c);
+                            newIndices.add(c);
+                            newIndices.add(i);//a
+
+                        }
                     }
-                    if(GeometryUtils.checkEdgesFromIndices(edges,indexC,indexA)){
-                        newIndices.add(indexC);
-                        newIndices.add(indexA);
+                }
+
+                if(newIndices!=null && newIndices.size()>0){
+                    _wireframe = new int[newIndices.size()];
+                    for (int newIndex : newIndices) {
+                        _wireframe[_wireframeCount++] = newIndex;
                     }
+                    geometry.getBuffers().put("wireframe",new BufferAttribute(_wireframe,1));
+                }
+            }else if(indices.isShortType()){
+                short[] _wireframe = null;
+                int _wireframeCount = 0;
+                java.util.LinkedList<Short> newIndices = null;
+                if(indices.getShortArray().length>0){
+                    short[] _indices = indices.getShortArray();
+                    short indexA,indexB,indexC;
+
+                    newIndices = new java.util.LinkedList<>();
+
+                    android.util.SparseArray<java.util.LinkedList<Short>> edges =
+                            new android.util.SparseArray<>();
+
+                    for(int i=0,length = _indices.length;i<length;i +=3){
+                        indexA = _indices[i];
+                        indexB = _indices[i+1];
+                        indexC = _indices[i+2];
+                        if(GeometryUtils.checkEdgesFromIndices(edges,indexA,indexB)){
+                            newIndices.add(indexA);
+                            newIndices.add(indexB);
+                        }
+                        if(GeometryUtils.checkEdgesFromIndices(edges,indexB,indexC)){
+                            newIndices.add(indexB);
+                            newIndices.add(indexC);
+                        }
+                        if(GeometryUtils.checkEdgesFromIndices(edges,indexC,indexA)){
+                            newIndices.add(indexC);
+                            newIndices.add(indexA);
+                        }
+                    }
+                }else{
+
+                    BufferAttribute position = (BufferAttribute)geometry.getBuffers().get("position");
+                    short b,c;
+                    if(position!=null && position.getFloatArray().length>0){
+                        newIndices = new java.util.LinkedList<Short>();
+                        for ( short i = 0, l = (short)( position.getFloatArray().length / 3 - 1); i < l; i += 3 ) {
+
+                            b = (short)(i + 1);
+                            c = (short)(i + 2);
+
+                            newIndices.add(i);//a
+                            newIndices.add(b);
+                            newIndices.add(b);
+                            newIndices.add(c);
+                            newIndices.add(c);
+                            newIndices.add(i);//a
+
+                        }
+                    }
+                }
+
+                if(newIndices!=null && newIndices.size()>0){
+                    _wireframe = new short[newIndices.size()];
+                    for (short newIndex : newIndices) {
+                        _wireframe[_wireframeCount++] = newIndex;
+                    }
+                    geometry.getBuffers().put("wireframe",new BufferAttribute(_wireframe,1));
                 }
             }else{
 
-                BufferAttribute position = (BufferAttribute)geometry.getBuffers().get("position");
-                short b,c;
-                if(position!=null && position.getFloatArray().length>0){
-                    newIndices = new java.util.LinkedList<Short>();
-                    for ( short i = 0, l = (short)( position.getFloatArray().length / 3 - 1); i < l; i += 3 ) {
-
-                        b = (short)(i + 1);
-                        c = (short)(i + 2);
-
-                        newIndices.add(i);//a
-                        newIndices.add(b);
-                        newIndices.add(b);
-                        newIndices.add(c);
-                        newIndices.add(c);
-                        newIndices.add(i);//a
-
-                    }
-                }
             }
 
-            if(newIndices!=null && newIndices.size()>0){
-                _wireframe = new short[newIndices.size()];
-                java.util.Iterator<Short> iterator = newIndices.iterator();
-                while(iterator.hasNext()){
-                    _wireframe[_wireframeCount++] = iterator.next();
-                }
-                geometry.getBuffers().put("wireframe",new BufferAttribute(_wireframe,1));
-            }
+
 
         }
     }
@@ -285,7 +349,32 @@ public class GeometryUtils {
         boolean flag = false;
         java.util.LinkedList<Short> list = edges.get(indexA);
         if(list==null){
-            list = new java.util.LinkedList<Short>();
+            list = new java.util.LinkedList<>();
+            list.add(indexB);
+            edges.put(indexA,list);
+            flag = true;
+        }else{
+            if(list.indexOf(indexB)<0){
+                list.add(indexB);
+                flag = true;
+            }
+        }
+        return flag;
+    }
+    public static boolean checkEdgesFromIndices(
+            android.util.SparseArray<java.util.LinkedList<Integer>> edges,
+            int indexA,
+            int indexB
+    ){
+        if ( indexA > indexB ) {
+            int tmp = indexA;
+            indexA = indexB;
+            indexB = tmp;
+        }
+        boolean flag = false;
+        java.util.LinkedList<Integer> list = edges.get(indexA);
+        if(list==null){
+            list = new java.util.LinkedList<>();
             list.add(indexB);
             edges.put(indexA,list);
             flag = true;
@@ -298,14 +387,14 @@ public class GeometryUtils {
         return flag;
     }
 
-    public static BufferAttribute buildIndicesForLines(LinkedList<Short> indices) {
+    public static BufferAttribute buildShortIndicesForLines(LinkedList<Short> indices) {
         //PROVIENE DE INDICES DE TRIANGULOS (GL_TRIANGLES)
         BufferAttribute bufferAttribute = null;
         if(indices!=null && indices.size()>0 && indices.size()%3==0){
             android.util.SparseArray<java.util.LinkedList<Short>> edges =
-                    new android.util.SparseArray<java.util.LinkedList<Short>>();
+                    new android.util.SparseArray<>();
 
-            java.util.LinkedList<Short> newIndices = new java.util.LinkedList<Short>();
+            java.util.LinkedList<Short> newIndices = new java.util.LinkedList<>();
             short a,b,c;
             for(int i=0,l=indices.size();i<l;i+=3){
                 a = indices.get(i);
@@ -328,9 +417,46 @@ public class GeometryUtils {
             if(newIndices.size()>0){
                 short[] _wireframe = new short[newIndices.size()];
                 int _wireframeCount = 0;
-                java.util.Iterator<Short> iterator = newIndices.iterator();
-                while(iterator.hasNext()){
-                    _wireframe[_wireframeCount++] = iterator.next();
+                for (Short newIndex : newIndices) {
+                    _wireframe[_wireframeCount++] = newIndex;
+                }
+                bufferAttribute = new BufferAttribute(_wireframe,1);
+            }
+        }
+        return bufferAttribute;
+    }
+    public static BufferAttribute buildIntIndicesForLines(LinkedList<Integer> indices) {
+        //PROVIENE DE INDICES DE TRIANGULOS (GL_TRIANGLES)
+        BufferAttribute bufferAttribute = null;
+        if(indices!=null && indices.size()>0 && indices.size()%3==0){
+            android.util.SparseArray<java.util.LinkedList<Integer>> edges =
+                    new android.util.SparseArray<>();
+
+            java.util.LinkedList<Integer> newIndices = new java.util.LinkedList<>();
+            int a,b,c;
+            for(int i=0,l=indices.size();i<l;i+=3){
+                a = indices.get(i);
+                b = indices.get(i+1);
+                c = indices.get(i+2);
+
+                if(GeometryUtils.checkEdgesFromIndices(edges,a,b)){
+                    newIndices.add(a);
+                    newIndices.add(b);
+                }
+                if(GeometryUtils.checkEdgesFromIndices(edges,b,c)){
+                    newIndices.add(b);
+                    newIndices.add(c);
+                }
+                if(GeometryUtils.checkEdgesFromIndices(edges,c,a)){
+                    newIndices.add(c);
+                    newIndices.add(a);
+                }
+            }
+            if(newIndices.size()>0){
+                int[] _wireframe = new int[newIndices.size()];
+                int _wireframeCount = 0;
+                for (Integer newIndex : newIndices) {
+                    _wireframe[_wireframeCount++] = newIndex;
                 }
                 bufferAttribute = new BufferAttribute(_wireframe,1);
             }
@@ -338,49 +464,99 @@ public class GeometryUtils {
         return bufferAttribute;
     }
 
-    public static void buildGeometryFromBufferGeometry(Geometry geometry, BufferGeometry bufferGeometry) {
+    public static void buildGeometryFromBufferGeometry(@NonNull Geometry geometry,@NonNull BufferGeometry bufferGeometry) {
         ObjectJSON attributes = bufferGeometry.getAttributes();
         float[] vertices    = attributes.get("position")!=null  ? ((BufferAttribute)attributes.get("position")).getFloatArray() : null;
         float[] normals     = attributes.get("normal")!=null    ? ((BufferAttribute)attributes.get("normal")).getFloatArray()   : null;
         float[] colors      = attributes.get("color")!=null     ? ((BufferAttribute)attributes.get("color")).getFloatArray()    : null;
         float[] uvs         = attributes.get("uv")!=null        ? ((BufferAttribute)attributes.get("uv")).getFloatArray()       : null;
-        short[] indices     = attributes.get("indices")!=null   ? ((BufferAttribute)attributes.get("indices")).getShortArray()  : null;
+
+        BufferAttribute indices = ((BufferAttribute)attributes.get("indices"));
+
+
+        short[] shortIndices = null;
+        int[] intIndices = null;
+
+        if(indices.isShortType()){
+            shortIndices = indices.getShortArray();
+        }else if(indices.isIntType()){
+            intIndices = indices.getIntArray();
+        }else{
+            //TODO
+        }
+
         int i=0,j=0,length=0;
         Face3 face;
         java.util.LinkedList<Vector3> normal = null;
         java.util.LinkedList<Color> color = null;
         java.util.LinkedList<Vector2> uv = null;
         if(vertices!=null && vertices.length>0 && vertices.length%3==0){
-            if(normals!=null && normals.length>0)normal = new java.util.LinkedList<Vector3>();
-            if(colors!=null && colors.length>0)color = new java.util.LinkedList<Color>();
-            if(uvs!=null && uvs.length>0)uv = new java.util.LinkedList<Vector2>();
+            if(normals!=null && normals.length>0) {
+                normal = new LinkedList<>();
+            }
+            if(colors!=null && colors.length>0) {
+                color = new LinkedList<>();
+            }
+            if(uvs!=null && uvs.length>0) {
+                uv = new LinkedList<>();
+            }
             for(length=vertices.length;i<length;i+=3,j+=2){
                 geometry.getVertices().add(new Vector3(vertices[i],vertices[i+1],vertices[i+2]));
-                if(normal!=null && normals!=null)normal.add(new Vector3(normals[i],normals[i+1],normals[i+2]));
-                if(color!=null && colors!=null)color.add(new Color(colors[i],colors[i+1],colors[i+2]));
-                if(uv!=null && uvs!=null)uv.add(new Vector2(uvs[j],uvs[j+1]));
+                if(normal!=null && normals!=null) {
+                    normal.add(new Vector3(normals[i], normals[i + 1], normals[i + 2]));
+                }
+                if(color!=null && colors!=null) {
+                    color.add(new Color(colors[i], colors[i + 1], colors[i + 2]));
+                }
+                if(uv!=null && uvs!=null) {
+                    uv.add(new Vector2(uvs[j], uvs[j + 1]));
+                }
             }
-
         }
-        if(indices!=null && indices.length>0 && indices.length%3==0){
-            i=0;j=0;
-            length = indices.length;
+
+        //TRIANGLE
+        if(shortIndices!=null && shortIndices.length>0 && shortIndices.length%3==0){
+            i=0;
+            length = shortIndices.length;
             for(;i<length;i+=3){
-                face = new Face3(indices[i],indices[i+1],indices[i+2]);
+                face = new Face3(shortIndices[i],shortIndices[i+1],shortIndices[i+2]);
                 if(normals!=null){
-                    face.setNormalA(normal.get(indices[i]));
-                    face.setNormalB(normal.get(indices[i+1]));
-                    face.setNormalC(normal.get(indices[i+2]));
+                    face.setNormalA(normal.get(shortIndices[i]));
+                    face.setNormalB(normal.get(shortIndices[i+1]));
+                    face.setNormalC(normal.get(shortIndices[i+2]));
                 }
                 if(colors!=null){
-                    face.setColorAtIndexA(color.get(indices[i]));
-                    face.setColorAtIndexB(color.get(indices[i+1]));
-                    face.setColorAtIndexC(color.get(indices[i+2]));
+                    face.setColorAtIndexA(color.get(shortIndices[i]));
+                    face.setColorAtIndexB(color.get(shortIndices[i+1]));
+                    face.setColorAtIndexC(color.get(shortIndices[i+2]));
                 }
                 if(uvs!=null){
-                    face.setUvAtIndexA(uv.get(indices[i]));
-                    face.setUvAtIndexB(uv.get(indices[i+1]));
-                    face.setUvAtIndexC(uv.get(indices[i+2]));
+                    face.setUvAtIndexA(uv.get(shortIndices[i]));
+                    face.setUvAtIndexB(uv.get(shortIndices[i+1]));
+                    face.setUvAtIndexC(uv.get(shortIndices[i+2]));
+                }
+                geometry.addFace3(face);
+            }
+        }
+        if(intIndices!=null && intIndices.length>0 && intIndices.length%3==0){
+            i=0;
+            length = intIndices.length;
+            for(;i<length;i+=3){
+                face = new Face3(shortIndices[i],intIndices[i+1],intIndices[i+2]);
+                if(normals!=null){
+                    face.setNormalA(normal.get(intIndices[i]));
+                    face.setNormalB(normal.get(intIndices[i+1]));
+                    face.setNormalC(normal.get(intIndices[i+2]));
+                }
+                if(colors!=null){
+                    face.setColorAtIndexA(color.get(intIndices[i]));
+                    face.setColorAtIndexB(color.get(intIndices[i+1]));
+                    face.setColorAtIndexC(color.get(intIndices[i+2]));
+                }
+                if(uvs!=null){
+                    face.setUvAtIndexA(uv.get(intIndices[i]));
+                    face.setUvAtIndexB(uv.get(intIndices[i+1]));
+                    face.setUvAtIndexC(uv.get(intIndices[i+2]));
                 }
                 geometry.addFace3(face);
             }

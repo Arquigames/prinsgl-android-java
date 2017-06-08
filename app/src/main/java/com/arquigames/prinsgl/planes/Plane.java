@@ -10,7 +10,7 @@ import com.arquigames.prinsgl.maths.vectors.Vector3;
 /**
  * Created by usuario on 26/06/2016.
  */
-public class Plane {
+public class Plane implements Cloneable{
     private Vector3 normal = new Vector3();
     private float constant = 0;
     public Plane(){
@@ -60,6 +60,7 @@ public class Plane {
 
         return this;
     }
+    @Override
     public Plane clone(){
         Plane p = new Plane(this.getNormal(),this.constant);
         return p;

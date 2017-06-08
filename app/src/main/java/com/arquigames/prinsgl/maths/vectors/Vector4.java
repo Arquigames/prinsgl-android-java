@@ -6,7 +6,7 @@ import com.arquigames.prinsgl.maths.matrix.Matrix4;
 /**
  * Created by usuario on 26/06/2016.
  */
-public class Vector4 {
+public class Vector4 implements  Cloneable{
     private float x = 0;
     private float y = 0;
     private float z = 0;
@@ -63,6 +63,7 @@ public class Vector4 {
     public float getW() {
         return w;
     }
+    @Override
     public Vector4 clone(){
         return new Vector4(this.x,this.y,this.z,this.w);
     }

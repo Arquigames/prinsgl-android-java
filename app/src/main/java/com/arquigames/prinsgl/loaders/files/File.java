@@ -5,7 +5,7 @@ import com.arquigames.prinsgl.ObjectJSON;
 /**
  * Created by usuario on 14/08/2016.
  */
-public class File {
+public class File implements Cloneable{
     private String path;
     private int id;
     private String fileName;
@@ -20,6 +20,10 @@ public class File {
         this.setPath(path);
         this.setId(id);
         this.setFile(fileName);
+    }
+    @Override
+    public File clone() throws CloneNotSupportedException{
+        throw new CloneNotSupportedException("cannot clone File");
     }
     public String getPath() {
         return path;

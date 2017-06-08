@@ -8,7 +8,7 @@ import com.arquigames.prinsgl.maths.vectors.Vector3;
 /**
  * Created by usuario on 26/06/2016.
  */
-public class Euler {
+public class Euler implements Cloneable{
     private float x;
     private float y;
     private float z;
@@ -90,8 +90,9 @@ public class Euler {
     public Euler set (float x, float y, float z){
         return this.set(x,y,z, null);
     }
+    @Override
     public Euler clone(){
-        return new Euler(this.getX(),this.getY(),this.getZ(),this.getOrder());
+        return new Euler(this.x,this.y,this.z,this.order);
     }
     public Euler copy(Euler e){
         this.setX(e.getX());
@@ -111,7 +112,7 @@ public class Euler {
 
         order = order!=null ? order : this.getOrder();
         if(order=="XYZ"){
-            this.y = (float) Math.asin( MathUtils.clamp( m13, - 1, 1 ) );
+            this.y = (float) Math.asin( MathUtils.clamp( m13, - 1f, 1f ) );
             if (  Math.abs( m13 ) < 0.99999f ) {
 
                 this.x = (float) Math.atan2( - m23, m33 );
@@ -125,7 +126,7 @@ public class Euler {
             }
         }else if ( order == "YXZ" ) {
 
-            this.x = (float) Math.asin( - MathUtils.clamp( m23, - 1, 1 ) );
+            this.x = (float) Math.asin( - MathUtils.clamp( m23, - 1f, 1f ) );
 
             if ( Math.abs( m23 ) < 0.99999 ) {
 
@@ -141,9 +142,9 @@ public class Euler {
 
         } else if ( order == "ZXY" ) {
 
-            this.x = (float) Math.asin( MathUtils.clamp( m32, - 1, 1 ) );
+            this.x = (float) Math.asin( MathUtils.clamp( m32, - 1f, 1f ) );
 
-            if ( Math.abs( m32 ) < 0.99999 ) {
+            if ( Math.abs( m32 ) < 0.99999f ) {
 
                 this.y = (float) Math.atan2( - m31, m33 );
                 this.z = (float) Math.atan2( - m12, m22 );
@@ -173,9 +174,9 @@ public class Euler {
 
         } else if ( order == "YZX" ) {
 
-            this.z = (float) Math.asin( MathUtils.clamp( m21, - 1, 1 ) );
+            this.z = (float) Math.asin( MathUtils.clamp( m21, - 1f, 1f ) );
 
-            if ( Math.abs( m21 ) < 0.99999 ) {
+            if ( Math.abs( m21 ) < 0.99999f ) {
 
                 this.x = (float) Math.atan2( - m23, m22 );
                 this.y = (float) Math.atan2( - m31, m11 );
@@ -191,7 +192,7 @@ public class Euler {
 
             this.z = (float) Math.asin( - MathUtils.clamp( m12, - 1, 1 ) );
 
-            if ( (float) Math.abs( m12 ) < 0.99999 ) {
+            if ( Math.abs( m12 ) < 0.99999f ) {
 
                 this.x = (float) Math.atan2( m32, m22 );
                 this.y = (float) Math.atan2( m13, m11 );
@@ -205,7 +206,7 @@ public class Euler {
 
         } else {
 
-            System.err.println("order undefined");
+            //TODO
 
         }
         this.order = order;

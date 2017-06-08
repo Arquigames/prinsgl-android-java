@@ -32,7 +32,7 @@ import java.util.LinkedList;
 /**
  * Created by usuario on 13/08/2016.
  */
-public class ThreeJsonLoader {
+public class ThreeJsonLoader implements Cloneable{
     private static String TAG= "ThreeJsonLoader";
     public static boolean DEBUG = false;
     private Context context;
@@ -43,6 +43,11 @@ public class ThreeJsonLoader {
     public ThreeJsonLoader(Context context){
         this();
         this.context = context;
+    }
+
+    @Override
+    public ThreeJsonLoader clone() throws CloneNotSupportedException{
+        throw new CloneNotSupportedException("cannot clone ThreeJsonLoader");
     }
     public ObjectJSON load(String path){
         this.textures.clear();

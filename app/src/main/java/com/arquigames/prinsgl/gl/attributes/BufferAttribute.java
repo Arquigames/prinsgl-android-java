@@ -14,12 +14,13 @@ import java.nio.ByteOrder;
 /**
  * Created by usuario on 07/08/2016.
  */
-public class BufferAttribute  {
+public class BufferAttribute implements Cloneable{
 
     protected String name = "";
 
     protected float[] floatArray;
     protected short[] shortArray;
+    protected int[] intArray;
     protected int glType=0;
 
     protected int coordsPerData=0;
@@ -47,6 +48,10 @@ public class BufferAttribute  {
                 this.shortArray = new short[numValues];
                 this.stride = coordsPerData * 2;
                 break;
+            case GLES20.GL_UNSIGNED_INT:
+                this.intArray = new int[numValues];
+                this.stride = coordsPerData * 2;
+                break;
         }
     }
     public BufferAttribute(float [] values,int coordsPerData, int glType){
@@ -61,11 +66,20 @@ public class BufferAttribute  {
         this.glType = glType;
         this.stride = coordsPerData * 2;
     }
+    public BufferAttribute(int [] values,int coordsPerData, int glType){
+        this.intArray = values;
+        this.coordsPerData = coordsPerData;
+        this.glType = glType;
+        this.stride = coordsPerData * 2;
+    }
     public float[] getFloatArray(){
         return this.floatArray;
     }
     public short[] getShortArray(){
         return this.shortArray;
+    }
+    public int[] getIntArray(){
+        return this.intArray;
     }
     public int getSize(){
         int size= 0;
@@ -76,6 +90,10 @@ public class BufferAttribute  {
             case GLES20.GL_UNSIGNED_SHORT:
             case GLES20.GL_SHORT:
                 size = this.shortArray.length;
+                break;
+            case GLES20.GL_UNSIGNED_INT:
+            case GLES20.GL_INT:
+                size = this.intArray.length;
                 break;
         }
         return size;
@@ -132,17 +150,31 @@ public class BufferAttribute  {
         java.util.Iterator<Face3> iterator = faces.iterator();
         Face3 face;
         int size = faces.size()*3;
-        this.shortArray = new short[size];
+        if(size>32767){
+            this.setGlType(GLES20.GL_UNSIGNED_INT);
+            this.intArray = new int[size];
+            this.setStride(4);//4 bytes
+        }else{
+            this.setGlType(GLES20.GL_UNSIGNED_SHORT);
+            this.shortArray = new short[size];
+            this.setStride(2);//2 bytes
+        }
+
+
         int count=0;
         while(iterator.hasNext()){
             face = iterator.next();
-            this.shortArray[count++]=face.getIndexA();
-            this.shortArray[count++]=face.getIndexB();
-            this.shortArray[count++]=face.getIndexC();
+            if(this.glType==GLES20.GL_UNSIGNED_SHORT){
+                this.shortArray[count++]=(short)face.getIndexA();
+                this.shortArray[count++]=(short)face.getIndexB();
+                this.shortArray[count++]=(short)face.getIndexC();
+            }else{
+                this.intArray[count++]=face.getIndexA();
+                this.intArray[count++]=face.getIndexB();
+                this.intArray[count++]=face.getIndexC();
+            }
         }
-        this.setGlType(GLES20.GL_UNSIGNED_SHORT);
         this.setCoordsPerData(1);
-        this.setStride(2);
 
     }
     public BufferAttribute(float[] values,int coordsPerData){
@@ -157,20 +189,35 @@ public class BufferAttribute  {
         this.setCoordsPerData(coordsPerData);
         this.setStride(coordsPerData * 2);
     }
+    public BufferAttribute(int[] values,int coordsPerData){
+        this.intArray = values;
+        this.setGlType(GLES20.GL_UNSIGNED_INT);
+        this.setCoordsPerData(coordsPerData);
+        this.setStride(coordsPerData * 4);
+    }
     public Buffer getBuffer(){
         if(this.buffer==null){
+            ByteBuffer bb;
             switch (this.glType){
                 case GLES20.GL_FLOAT:
-                    ByteBuffer bb = ByteBuffer.allocateDirect(
+                    bb = ByteBuffer.allocateDirect(
                             this.floatArray.length * 4);
                     bb.order(ByteOrder.nativeOrder());
                     this.buffer = bb.asFloatBuffer().put(this.floatArray).position(0);
                     break;
                 case GLES20.GL_UNSIGNED_SHORT:
-                    ByteBuffer dlb = ByteBuffer.allocateDirect(
+                case GLES20.GL_SHORT:
+                    bb = ByteBuffer.allocateDirect(
                             this.shortArray.length * 2);
-                    dlb.order(ByteOrder.nativeOrder());
-                    this.buffer = dlb.asShortBuffer().put(this.shortArray).position(0);
+                    bb.order(ByteOrder.nativeOrder());
+                    this.buffer = bb.asShortBuffer().put(this.shortArray).position(0);
+                    break;
+                case GLES20.GL_UNSIGNED_INT:
+                case GLES20.GL_INT:
+                    bb = ByteBuffer.allocateDirect(
+                            this.intArray.length * 4);
+                    bb.order(ByteOrder.nativeOrder());
+                    this.buffer = bb.asIntBuffer().put(this.intArray).position(0);
                     break;
             }
         }
@@ -193,6 +240,19 @@ public class BufferAttribute  {
     public String toString(){
         return "BufferAttribute[glType="+this.glType+",coordsPerData="+this.coordsPerData+",mode="+this.mode+",stride="+this.stride+",size="+this.getSize()+"]";
     }
+
+
+    public boolean isShortType(){
+        return this.shortArray!=null && this.shortArray.length>0;
+    }
+    public boolean isIntType(){
+        return this.intArray!=null && this.intArray.length>0;
+    }
+    public boolean isFloatType(){
+        return this.floatArray!=null && this.floatArray.length>0;
+    }
+
+    @Override
     public BufferAttribute clone(){
         /*no clona/copia ni floatBuffer ni shortBuffer*/
         BufferAttribute bufferAttribute = new BufferAttribute();
@@ -200,8 +260,9 @@ public class BufferAttribute  {
         return bufferAttribute;
     }
     public BufferAttribute copy(BufferAttribute bufferAttribute){
-        float[] floatArray = bufferAttribute.getFloatArray();
-        short[] shortArray = bufferAttribute.getShortArray();
+        float[] floatArray  = bufferAttribute.getFloatArray();
+        short[] shortArray  = bufferAttribute.getShortArray();
+        int[] intArray      = bufferAttribute.getIntArray();
         int i=0,j=0;
         int length=0;
         if(floatArray!=null && floatArray.length>0){
@@ -216,6 +277,13 @@ public class BufferAttribute  {
             this.shortArray = new short[length];
             for(i=0;i<length;i++){
                 this.shortArray[i] = shortArray[i];
+            }
+        }
+        if(intArray!=null && intArray.length>0){
+            length = intArray.length;
+            this.intArray = new int[length];
+            for(i=0;i<length;i++){
+                this.intArray[i] = intArray[i];
             }
         }
         this.glType         = bufferAttribute.getGlType();
@@ -279,6 +347,10 @@ public class BufferAttribute  {
                 case GLES20.GL_UNSIGNED_SHORT:
                     _count = this.shortArray.length/this.coordsPerData;
                     break;
+                case GLES20.GL_INT:
+                case GLES20.GL_UNSIGNED_INT:
+                    _count = this.intArray.length/this.coordsPerData;
+                    break;
             }
         }
         return _count;
@@ -291,6 +363,7 @@ public class BufferAttribute  {
         }
         this.floatArray = null;
         this.shortArray = null;
+        this.intArray = null;
     }
 
     public String getName() {

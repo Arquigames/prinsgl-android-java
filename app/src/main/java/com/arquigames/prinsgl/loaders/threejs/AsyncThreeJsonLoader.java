@@ -9,7 +9,7 @@ import com.arquigames.prinsgl.loaders.files.File;
 /**
  * Created by usuario on 14/08/2016.
  */
-public class AsyncThreeJsonLoader extends AsyncTask<File,File,Integer> {
+public class AsyncThreeJsonLoader extends AsyncTask<File,File,Integer> implements Cloneable {
     private ThreeJsonLoader jsonLoader;
     private ThreeJsonLoaderListener threeJsonLoaderListener;
     public AsyncThreeJsonLoader(ThreeJsonLoader jsonLoader, ThreeJsonLoaderListener threeJsonLoaderListener){
@@ -18,6 +18,10 @@ public class AsyncThreeJsonLoader extends AsyncTask<File,File,Integer> {
     }
     public void load(File[] params){
         this.execute(params);
+    }
+    @Override
+    public AsyncThreeJsonLoader clone() throws CloneNotSupportedException{
+        throw new CloneNotSupportedException("cannot clone AsyncThreeJsonLoader");
     }
     @Override
     protected Integer doInBackground(File[] params) {

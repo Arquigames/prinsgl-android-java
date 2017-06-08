@@ -9,6 +9,7 @@ import com.arquigames.prinsgl.Util;
  * Created by usuario on 26/06/2016.
  */
 public class PerspectiveCamera extends Camera {
+    public static boolean DEBUG = false;
     private float focalLength = 10f;
     private float zoom 	= 1f;
 
@@ -160,7 +161,7 @@ public class PerspectiveCamera extends Camera {
             camera.copy(this);
             return camera;
         }catch(Exception e){
-            Log.e("PerspectiveCamera","[CLONE] = "+ Util.exceptionToString(e));
+            if(DEBUG)Log.e("PerspectiveCamera","[CLONE] = "+ Util.exceptionToString(e));
             return null;
         }
     }

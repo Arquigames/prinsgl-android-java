@@ -71,6 +71,7 @@ public class PlaneGeometry extends Geometry{
         }
         return this;
     }
+    @Override
     public PlaneGeometry clone(){
         PlaneGeometry geometry = new PlaneGeometry();
         geometry.copy(this);

@@ -3,7 +3,7 @@ package com.arquigames.prinsgl.gl.attributes;
 /**
  * Created by usuario on 12/07/2016.
  */
-public class GLAttribute {
+public class GLAttribute implements  Cloneable{
     private String name = "";
     private String type = "";
     private int glLocation = -1;
@@ -67,4 +67,11 @@ public class GLAttribute {
     public void setNeedsUpdate(boolean needsUpdate) {
         this.needsUpdate = needsUpdate;
     }
+
+    @Override
+    public GLAttribute clone() throws CloneNotSupportedException{
+        throw new CloneNotSupportedException("cannot clone GLAttribute");
+    }
+
+
 }

@@ -3,7 +3,7 @@ package com.arquigames.prinsgl.loaders.events;
 /**
  * Created by usuario on 14/08/2016.
  */
-public class EventLoader {
+public class EventLoader implements Cloneable{
 
     public static int ACTION_LOADED = 0x01;
     public static int ACTION_PERFORMED = 0x02;
@@ -15,6 +15,10 @@ public class EventLoader {
         this.setTarget(target);
         this.setWhat(what);
         this.setAction(action);
+    }
+    @Override
+    public EventLoader clone() throws CloneNotSupportedException{
+        throw new CloneNotSupportedException("cannot clone EventLoader");
     }
 
     public int getWhat() {

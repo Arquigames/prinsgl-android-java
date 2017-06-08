@@ -8,7 +8,7 @@ import com.arquigames.prinsgl.maths.vectors.Vector2I;
 /**
  * Created by usuario on 12/07/2016.
  */
-public class GLCapabilities {
+public class GLCapabilities implements Cloneable{
 
     private static String TAG = "GLCapabilities";
 
@@ -66,6 +66,12 @@ public class GLCapabilities {
     }
     public int getMaxCombinedTextureImageUnits(){
         return this.maxCombinedTextureImageUnits;
+    }
+
+
+    @Override
+    public GLCapabilities clone() throws CloneNotSupportedException {
+        throw new CloneNotSupportedException("cannot clone GLCapabilities");
     }
 
     public void init() {

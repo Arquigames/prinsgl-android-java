@@ -28,4 +28,9 @@ public class GLBufferRenderer implements IBufferRenderer {
         if(GLRenderer.DEBUG) Log.e(TAG,"setMode = "+mode);
         this.mode = mode;
     }
+
+    @Override
+    public GLBufferRenderer clone() throws CloneNotSupportedException {
+        throw new CloneNotSupportedException("cannot clone GLBufferRenderer");
+    }
 }

@@ -10,6 +10,7 @@ import com.arquigames.prinsgl.gl.attributes.BufferAttribute;
 public class PlaneBufferGeometry extends BufferGeometry {
 
     private static String TAG = "PlaneBufferGeometry";
+    public static boolean DEBUG  = false;
 
     protected float width;
     protected float height;
@@ -75,7 +76,7 @@ public class PlaneBufferGeometry extends BufferGeometry {
 
                 String str_vertex = this.vertices[this.getOffset()]+","+this.vertices[ this.getOffset() + 1 ]+",0";
                 String str_uv = this.uvs[this.getOffset2()]+","+this.uvs[ this.getOffset2() + 1 ];
-                Log.e(TAG,"VERTEX - UV->"+cc+", ["+str_vertex+"], uv["+str_uv+"]");
+                if(DEBUG)Log.e(TAG,"VERTEX - UV->"+cc+", ["+str_vertex+"], uv["+str_uv+"]");
 
                 this.setOffset(this.getOffset() + 3);
                 this.setOffset2(this.getOffset2() + 2);
@@ -87,7 +88,7 @@ public class PlaneBufferGeometry extends BufferGeometry {
 
         this.setOffset(0);
 
-        this.indices = new short[this.getGridX() * this.getGridY() * 6];
+        this.shortIndices = new short[this.getGridX() * this.getGridY() * 6];
 
         for (int iy = 0; iy < this.getGridY(); iy ++ ) {
 
@@ -98,16 +99,19 @@ public class PlaneBufferGeometry extends BufferGeometry {
                 int c = ( ix + 1 ) + this.getGridX1() * ( iy + 1 );
                 int d = ( ix + 1 ) + this.getGridX1() * iy;
 
-                Log.e(TAG,"indices(a="+a+",b="+b+",d="+d+")");
-                Log.e(TAG,"indices(b="+b+",c="+c+",d="+d+")");
+                if(DEBUG){
+                    Log.e(TAG,"shortIndices(a="+a+",b="+b+",d="+d+")");
+                    Log.e(TAG,"shortIndices(b="+b+",c="+c+",d="+d+")");
+                }
 
-                this.indices[this.getOffset()] = (short)a;
-                this.indices[ this.getOffset() + 1 ] = (short)b;
-                this.indices[ this.getOffset() + 2 ] = (short)d;
 
-                this.indices[ this.getOffset() + 3 ] = (short)b;
-                this.indices[ this.getOffset() + 4 ] = (short)c;
-                this.indices[ this.getOffset() + 5 ] = (short)d;
+                this.shortIndices[this.getOffset()] = (short)a;
+                this.shortIndices[ this.getOffset() + 1 ] = (short)b;
+                this.shortIndices[ this.getOffset() + 2 ] = (short)d;
+
+                this.shortIndices[ this.getOffset() + 3 ] = (short)b;
+                this.shortIndices[ this.getOffset() + 4 ] = (short)c;
+                this.shortIndices[ this.getOffset() + 5 ] = (short)d;
 
                 this.setOffset(this.getOffset() + 6);
 
@@ -115,7 +119,7 @@ public class PlaneBufferGeometry extends BufferGeometry {
 
         }
 
-        this.setIndex(new BufferAttribute(this.indices, 1) );
+        this.setIndex(new BufferAttribute(this.shortIndices, 1) );
         this.addAttribute( "position", new BufferAttribute( this.vertices, 3 ) );
         this.addAttribute( "normal", new BufferAttribute( this.normals, 3 ) );
         this.addAttribute( "uv", new BufferAttribute( this.uvs, 2 ) );

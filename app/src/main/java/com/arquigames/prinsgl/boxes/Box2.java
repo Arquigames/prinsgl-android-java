@@ -6,7 +6,7 @@ import com.arquigames.prinsgl.maths.vectors.Vector2;
 /**
  * Created by usuario on 26/06/2016.
  */
-public class Box2 {
+public class Box2 implements Cloneable{
     private Vector2 min;
     private Vector2 max;
     public Box2(){
@@ -53,6 +53,7 @@ public class Box2 {
 
         return this;
     }
+    @Override
     public Box2 clone(){
         Box2 b = new Box2();
         b.copy(this);

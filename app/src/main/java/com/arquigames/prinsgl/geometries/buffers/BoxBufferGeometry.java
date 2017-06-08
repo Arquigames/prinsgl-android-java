@@ -42,7 +42,7 @@ public class BoxBufferGeometry extends BufferGeometry {
         int indexCount = this.calculateIndexCount( this.widthSegments, this.heightSegments, this.depthSegments );
 
         // buffers
-        this.indices = new short[indexCount];
+        this.shortIndices = new short[indexCount];
         this.vertices = new float[vertexCount * 3] ;
         this.normals = new float[vertexCount * 3];
         this.uvs = new float[vertexCount * 2] ;
@@ -65,7 +65,7 @@ public class BoxBufferGeometry extends BufferGeometry {
         this.buildPlane( "x", "y", "z", - 1, - 1, this.width, this.height, - this.depth,  this.widthSegments, this.heightSegments, 5 ); // nz
 
         // build geometry
-        this.setIndex( new BufferAttribute( this.indices, 1 ) );
+        this.setIndex( new BufferAttribute( this.shortIndices, 1 ) );
         this.addAttribute( "position", new BufferAttribute( this.vertices, 3 ) );
         this.addAttribute( "normal", new BufferAttribute( this.normals, 3 ) );
         this.addAttribute( "uv", new BufferAttribute( this.uvs, 2 ) );
@@ -150,7 +150,7 @@ public class BoxBufferGeometry extends BufferGeometry {
 
                 // uvs
                 this.uvs[ this.uvBufferOffset ] = ix / gridX;
-                this.uvs[ this.uvBufferOffset + 1 ] = 1 - ( iy / gridY );
+                this.uvs[ this.uvBufferOffset + 1 ] = 1f - ( iy / gridY );
 
                 // update offsets and counters
                 this.vertexBufferOffset += 3;
@@ -161,29 +161,29 @@ public class BoxBufferGeometry extends BufferGeometry {
 
         }
 
-        // 1. you need three indices to draw a single face
+        // 1. you need three shortIndices to draw a single face
         // 2. a single segment consists of two faces
-        // 3. so we need to generate six (2*3) indices per segment
+        // 3. so we need to generate six (2*3) shortIndices per segment
 
         for ( iy = 0; iy < gridY; iy ++ ) {
 
             for ( ix = 0; ix < gridX; ix ++ ) {
 
-                // indices
+                // shortIndices
                 short a = (short) (this.numberOfVertices + ix + gridX1 * iy);
                 short b = (short) (this.numberOfVertices + ix + gridX1 * ( iy + 1 ));
                 short c = (short) (this.numberOfVertices + ( ix + 1 ) + gridX1 * ( iy + 1 ));
                 short d = (short) (this.numberOfVertices + ( ix + 1 ) + gridX1 * iy);
 
                 // face one
-                this.indices[ this.indexBufferOffset ] = a;
-                this.indices[ this.indexBufferOffset + 1 ] = b;
-                this.indices[ this.indexBufferOffset + 2 ] = d;
+                this.shortIndices[ this.indexBufferOffset ] = a;
+                this.shortIndices[ this.indexBufferOffset + 1 ] = b;
+                this.shortIndices[ this.indexBufferOffset + 2 ] = d;
 
                 // face two
-                this.indices[ this.indexBufferOffset + 3 ] = b;
-                this.indices[ this.indexBufferOffset + 4 ] = c;
-                this.indices[ this.indexBufferOffset + 5 ] = d;
+                this.shortIndices[ this.indexBufferOffset + 3 ] = b;
+                this.shortIndices[ this.indexBufferOffset + 4 ] = c;
+                this.shortIndices[ this.indexBufferOffset + 5 ] = d;
 
                 // update offsets and counters
                 this.indexBufferOffset += 6;

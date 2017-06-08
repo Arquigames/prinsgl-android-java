@@ -9,6 +9,9 @@ import com.arquigames.prinsgl.maths.vectors.Vector3;
  * Created by usuario on 26/06/2016.
  */
 public class SphereBufferGeometry extends BufferGeometry {
+
+    public static boolean DEBUG  = false;
+
     protected float radius;
     protected int widthSegments;
     protected int heightSegments;
@@ -114,14 +117,14 @@ public class SphereBufferGeometry extends BufferGeometry {
 
         java.util.Iterator<Short> _it = indices.iterator();
         if(indices.size()>0){
-            this.indices = new short[indices.size()];
+            this.shortIndices = new short[indices.size()];
             int _indicesCount=0;
             while(_it.hasNext()){
-                this.indices[_indicesCount++] = _it.next();
+                this.shortIndices[_indicesCount++] = _it.next();
             }
         }
 
-        if(this.indices!=null)this.setIndex(new BufferAttribute(this.indices, 1));
+        if(this.shortIndices !=null)this.setIndex(new BufferAttribute(this.shortIndices, 1));
         this.addAttribute( "position", positions );
         this.addAttribute( "normal", normals );
         this.addAttribute( "uv", uvs );

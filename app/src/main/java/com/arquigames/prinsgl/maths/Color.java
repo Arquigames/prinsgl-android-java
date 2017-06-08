@@ -3,7 +3,7 @@ package com.arquigames.prinsgl.maths;
 /**
  * Created by usuario on 26/06/2016.
  */
-public class Color {
+public class Color implements Cloneable{
     private float r;
     private float g;
     private float b;
@@ -68,31 +68,31 @@ public class Color {
         return this;
     }
     public float hue2rgb(float p, float q , float t){
-        if ( t < 0 ) t += 1;
-        if ( t > 1 ) t -= 1;
-        if ( t < 1 / 6 ) return p + ( q - p ) * 6 * t;
-        if ( t < 1 / 2 ) return q;
-        if ( t < 2 / 3 ) return p + ( q - p ) * 6 * ( 2 / 3 - t );
+        if ( t < 0f ) t += 1f;
+        if ( t > 1f ) t -= 1f;
+        if ( t < 1f / 6f ) return p + ( q - p ) * 6f * t;
+        if ( t < 1f / 2f ) return q;
+        if ( t < 2f / 3f ) return p + ( q - p ) * 6f * ( 2f / 3f - t );
         return p;
     }
     public Color setHSL(float h, float s, float l){
         // h,s,l ranges are in 0.0 - 1.0
-        h = MathUtils.euclideanModulo( h, 1 );
-        s = MathUtils.clamp( s, 0, 1 );
-        l = MathUtils.clamp( l, 0, 1 );
+        h = MathUtils.euclideanModulo( h, 1f );
+        s = MathUtils.clamp( s, 0f, 1f );
+        l = MathUtils.clamp( l, 0f, 1f );
 
-        if ( s == 0 ) {
+        if ( s == 0f ) {
 
             this.r = this.g = this.b = l;
 
         } else {
 
-            float p = l <= 0.5 ? l * ( 1 + s ) : l + s - ( l * s );
+            float p = l <= 0.5f ? l * ( 1f + s ) : l + s - ( l * s );
             float q = ( 2 * l ) - p;
 
-            this.r = this.hue2rgb( q, p, h + 1 / 3 );
+            this.r = this.hue2rgb( q, p, h + 1.0f / 3.0f );
             this.g = this.hue2rgb( q, p, h );
-            this.b = this.hue2rgb( q, p, h - 1 / 3 );
+            this.b = this.hue2rgb( q, p, h - 1.0f / 3.0f );
 
         }
 
@@ -101,6 +101,7 @@ public class Color {
     public Color setStyle(String style){
         return this;
     }
+    @Override
     public Color clone(){
         return new Color(this.r,this.g,this.b);
     }
@@ -112,7 +113,7 @@ public class Color {
         return this;
     }
     public Color copyLinearToGamma(Color color, float gammaFactor){
-        float safeInverse = ( gammaFactor > 0 ) ? ( 1.0f / gammaFactor ) : 1.0f;
+        float safeInverse = ( gammaFactor > 0f ) ? ( 1.0f / gammaFactor ) : 1.0f;
 
         this.r = (float) Math.pow( color.getR(), safeInverse );
         this.g = (float) Math.pow( color.getG(), safeInverse );

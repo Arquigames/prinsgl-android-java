@@ -8,7 +8,7 @@ import com.arquigames.prinsgl.maths.vectors.Vector3;
 /**
  * Created by usuario on 26/06/2016.
  */
-public class Sphere {
+public class Sphere implements Cloneable{
     private Vector3 center;
     private float radius;
     public Sphere(){
@@ -55,6 +55,7 @@ public class Sphere {
 
         return this;
     }
+    @Override
     public Sphere clone(){
         return new Sphere(this.getCenter(),this.getRadius());
     }

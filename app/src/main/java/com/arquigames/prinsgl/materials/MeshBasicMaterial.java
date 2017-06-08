@@ -55,4 +55,5 @@ public class MeshBasicMaterial extends Material{
             this.uniforms.put("matOpacity",glUniform);
         }
     }
+
 }

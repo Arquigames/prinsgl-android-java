@@ -419,4 +419,10 @@ public abstract class Material implements IMaterial{
 	public void setMorphTargets(boolean morphTargets) {
 		this.morphTargets = morphTargets;
 	}
+
+
+	@Override
+	public Material clone() throws CloneNotSupportedException {
+		throw new CloneNotSupportedException("cannot clone Material");
+	}
 }

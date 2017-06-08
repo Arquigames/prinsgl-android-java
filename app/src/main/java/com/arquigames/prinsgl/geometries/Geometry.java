@@ -15,7 +15,7 @@ import com.arquigames.prinsgl.maths.vectors.Vector2;
 import com.arquigames.prinsgl.maths.vectors.Vector3;
 
 
-public class Geometry{
+public class Geometry implements Cloneable{
 
 	private static String TAG = "Geometry";
 
@@ -400,6 +400,7 @@ public class Geometry{
 		}
 		return this;
 	}
+	@Override
 	public Geometry clone(){
 		Log.e(TAG,"Cloning Geometry");
 		Geometry geo = new Geometry();

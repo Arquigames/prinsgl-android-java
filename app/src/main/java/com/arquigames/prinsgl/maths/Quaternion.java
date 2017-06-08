@@ -8,7 +8,7 @@ import com.arquigames.prinsgl.maths.vectors.Vector4;
 /**
  * Created by usuario on 26/06/2016.
  */
-public class Quaternion {
+public class Quaternion implements Cloneable {
     private float x;
     private float y;
     private float z;
@@ -77,8 +77,11 @@ public class Quaternion {
         this.setZ(z);
         this.setW(w);
     }
+    @Override
     public Quaternion clone(){
-        return new Quaternion(this.x,this.y,this.z,this.w);
+        Quaternion q = new Quaternion();
+        q.copy(this);
+        return q;
     }
     public Quaternion copy(Quaternion q){
         this.x = q.getX();
@@ -235,19 +238,19 @@ public class Quaternion {
 
         Vector3 v1 = new Vector3();
 
-        r = vFrom.dot( vTo ) + 1;
+        r = vFrom.dot( vTo ) + 1f;
 
         if ( r < EPS ) {
 
-            r = 0;
+            r = 0f;
 
             if ( java.lang.Math.abs( vFrom.getX() ) > java.lang.Math.abs( vFrom.getZ() ) ) {
 
-                v1.set( - vFrom.getY(), vFrom.getX(), 0 );
+                v1.set( - vFrom.getY(), vFrom.getX(), 0f );
 
             } else {
 
-                v1.set( 0, - vFrom.getZ(), vFrom.getY() );
+                v1.set( 0f, - vFrom.getZ(), vFrom.getY() );
 
             }
 

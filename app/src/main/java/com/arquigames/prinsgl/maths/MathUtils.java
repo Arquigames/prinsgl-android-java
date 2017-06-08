@@ -41,16 +41,16 @@ public class MathUtils {
         return (float)(b1 + ( x - a1 ) * ( b2 - b1 ) / ( a2 - a1 ));
     }
     public static float degToRad(float degrees){
-        return (float)(degrees * java.lang.Math.PI / 180);
+        return (float)(degrees * java.lang.Math.PI / 180f);
     }
     public static float radToDeg(float radians){
-        return radians * (180 / (float)java.lang.Math.PI);
+        return radians * (180f / (float)java.lang.Math.PI);
     }
     public static float euclideanModulo(float n, float m){
         return ( ( n % m ) + m ) % m;
     }
     public static float mapLinear(float x,float a1,float a2,float b1,float b2 ){
-        return (float)(b1 + ( x - a1 ) * ( b2 - b1 ) / ( a2 - a1 ));
+        return (b1 + ( x - a1 ) * ( b2 - b1 ) / ( a2 - a1 ));
     }
     public static float smoothstep(float x, float min, float max){
         if ( x <= min ) return 0f;
@@ -58,7 +58,7 @@ public class MathUtils {
 
         x = ( x - min ) / ( max - min );
 
-        return x * x * ( 3 - 2 * x );
+        return x * x * ( 3f - 2f * x );
     }
     public static float smootherstep(float x, float min, float max){
         if ( x <= min ) return 0f;
@@ -66,7 +66,7 @@ public class MathUtils {
 
         x = ( x - min ) / ( max - min );
 
-        return x * x * x * ( x * ( x * 6 - 15 ) + 10 );
+        return x * x * x * ( x * ( x * 6f - 15f ) + 10f );
     }
     public static int randInt(int low, int high){
         return (int)(low + java.lang.Math.floor( java.lang.Math.random() * ( high - low + 1 ) ));

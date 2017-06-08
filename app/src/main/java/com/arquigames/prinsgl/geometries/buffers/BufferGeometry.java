@@ -8,12 +8,13 @@ import com.arquigames.prinsgl.gl.renderer.RenderGroup;
  * Created by usuario on 10/08/2016.
  */
 @SuppressWarnings("CloneDoesntCallSuperClone")
-public class BufferGeometry {
+public class BufferGeometry implements  Cloneable{
 
     protected ObjectJSON attributes = null;//BufferAttribute
 
     protected float[] vertices = null;
-    protected short[] indices = null;
+    protected short[] shortIndices = null;
+    protected int[] intIndices = null;
     protected float[] normals = null;
     protected float[] uvs = null;
 
@@ -45,6 +46,7 @@ public class BufferGeometry {
     public void setGroups(java.util.LinkedList<RenderGroup> groups) {
         this.groups = groups;
     }
+    @Override
     public BufferGeometry clone(){
         BufferGeometry bufferGeometry = new BufferGeometry();
         bufferGeometry.copy(this);

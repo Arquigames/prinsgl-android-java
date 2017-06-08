@@ -6,7 +6,7 @@ import com.arquigames.prinsgl.materials.Material;
 /**
  * Created by usuario on 08/08/2016.
  */
-public class RenderItem implements Comparable<RenderItem>{
+public class RenderItem implements Comparable<RenderItem>,Cloneable{
 
 
 
@@ -60,5 +60,9 @@ public class RenderItem implements Comparable<RenderItem>{
     public int compareTo(RenderItem renderItem) {
         if(this.z<renderItem.getZ())return -1;
         return this.z==renderItem.getZ() ? 0:1;
+    }
+    @Override
+    public RenderItem clone() throws CloneNotSupportedException{
+        throw new CloneNotSupportedException("cannot clone RenderItem");
     }
 }

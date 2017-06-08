@@ -1,6 +1,8 @@
 package com.arquigames.prinsgl;
 
 
+import android.support.annotation.NonNull;
+
 import com.arquigames.prinsgl.cameras.Camera;
 import com.arquigames.prinsgl.lights.Light;
 import com.arquigames.prinsgl.maths.Euler;
@@ -13,7 +15,7 @@ import com.arquigames.prinsgl.maths.vectors.Vector3;
 /**
  * Created by usuario on 13/07/2016.
  */
-public class Object3D implements Comparable<Object3D>{
+public class Object3D implements Comparable<Object3D>,Cloneable{
     protected String uuid = "";
 
     public static int counterObjects3D = 1;
@@ -342,6 +344,7 @@ public class Object3D implements Comparable<Object3D>{
     public void updateMatrixWorld(){
         this.updateMatrixWorld(true);
     }
+    @Override
     public Object3D clone(){
         Object3D object = new Object3D();
         try{
@@ -413,7 +416,7 @@ public class Object3D implements Comparable<Object3D>{
     }
 
     @Override
-    public int compareTo(Object3D object3D) {
+    public int compareTo(@NonNull Object3D object3D) {
         if(this.id<object3D.getId())return -1;
         return this.id == object3D.getId() ? 0:1;
     }

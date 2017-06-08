@@ -10,6 +10,7 @@ import com.arquigames.prinsgl.gl.attributes.BufferAttribute;
 public class CircleBufferGeometry extends BufferGeometry {
 
     private static String TAG = "CircleBufferGeometry";
+    public static boolean DEBUG  = false;
 
     protected float radius;
     protected int segments;
@@ -50,15 +51,15 @@ public class CircleBufferGeometry extends BufferGeometry {
             this.vertices[ i ] = radius * (float) Math.cos( segment );
             this.vertices[ i + 1 ] = radius * (float) Math.sin( segment );
 
-            this.normals[ i + 2 ] = 1; // normal z
+            this.normals[ i + 2 ] = 1f; // normal z
 
-            this.uvs[ ii ] = ( this.vertices[ i ] / radius + 1 ) / 2;
-            this.uvs[ ii + 1 ] = ( this.vertices[ i + 1 ] / radius + 1 ) / 2;
-
-            Log.e(TAG,"build -> vertices[i="+i+"]="+this.vertices[i]);
-            Log.e(TAG,"build -> vertices[i="+(i+1)+"]="+this.vertices[i+1]);
-            Log.e(TAG,"build -> vertices[i="+(i+2)+"]="+this.vertices[i+2]);
-
+            this.uvs[ ii ] = ( this.vertices[ i ] / radius + 1f ) / 2f;
+            this.uvs[ ii + 1 ] = ( this.vertices[ i + 1 ] / radius + 1f ) / 2f;
+            if(DEBUG){
+                Log.e(TAG,"build -> vertices[i="+i+"]="+this.vertices[i]);
+                Log.e(TAG,"build -> vertices[i="+(i+1)+"]="+this.vertices[i+1]);
+                Log.e(TAG,"build -> vertices[i="+(i+2)+"]="+this.vertices[i+2]);
+            }
         }
 
         java.util.LinkedList<Short> indices = new java.util.LinkedList<Short>();
@@ -72,17 +73,17 @@ public class CircleBufferGeometry extends BufferGeometry {
         }
 
         if(indices.size()>0){
-            this.indices = new short[indices.size()];
+            this.shortIndices = new short[indices.size()];
             int _indicesCount = 0;
             java.util.Iterator<Short> _it = indices.iterator();
             while(_it.hasNext()){
-                this.indices[_indicesCount++] = _it.next();
-                Log.e(TAG,"build -> indices[i="+(_indicesCount-1)+"]="+this.indices[_indicesCount-1]);
+                this.shortIndices[_indicesCount++] = _it.next();
+                Log.e(TAG,"build -> shortIndices[i="+(_indicesCount-1)+"]="+this.shortIndices[_indicesCount-1]);
             }
         }
 
 
-        if(this.indices!=null)this.setIndex( new BufferAttribute(this.indices, 1) );
+        if(this.shortIndices !=null)this.setIndex( new BufferAttribute(this.shortIndices, 1) );
         this.addAttribute( "position", new BufferAttribute( this.vertices, 3 ) );
         this.addAttribute( "normal", new BufferAttribute( this.normals, 3 ) );
         this.addAttribute( "uv", new BufferAttribute( this.uvs, 2 ) );

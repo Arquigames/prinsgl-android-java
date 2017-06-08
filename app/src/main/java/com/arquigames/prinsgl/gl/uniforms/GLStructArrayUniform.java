@@ -53,4 +53,9 @@ public class GLStructArrayUniform implements IUniform {
             this.structUniforms = null;
         }
     }
+
+    @Override
+    public IUniform clone()throws CloneNotSupportedException{
+        throw new CloneNotSupportedException("cannot clone GLStructArrayUniform");
+    }
 }

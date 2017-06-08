@@ -11,7 +11,7 @@ import java.util.LinkedList;
 /**
  * Created by usuario on 26/06/2016.
  */
-public class Box3 {
+public class Box3 implements Cloneable{
 
     public static float MAX_VALUE = +99999999999f;
     public static float MIN_VALUE = -99999999999f;
@@ -55,6 +55,7 @@ public class Box3 {
 
         return this;
     }
+    @Override
     public Box3 clone(){
         Box3 temp = new Box3();
         temp.copy(this);

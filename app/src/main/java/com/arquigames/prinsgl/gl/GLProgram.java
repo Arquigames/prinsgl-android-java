@@ -8,7 +8,7 @@ import com.arquigames.prinsgl.gl.uniforms.IUniform;
 /**
  * Created by usuario on 08/08/2016.
  */
-public class GLProgram {
+public class GLProgram implements Cloneable{
 
     private int programLocation = -1;
 
@@ -64,5 +64,9 @@ public class GLProgram {
             GLES20.glDeleteProgram(this.programLocation);
         }
 
+    }
+    @Override
+    public GLProgram clone() throws CloneNotSupportedException{
+        throw new CloneNotSupportedException("cannot clone GLProgram");
     }
 }

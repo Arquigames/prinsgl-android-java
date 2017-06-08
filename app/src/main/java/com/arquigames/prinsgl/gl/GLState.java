@@ -20,7 +20,7 @@ import java.nio.ByteBuffer;
 /**
  * Created by usuario on 10/08/2016.
  */
-public class GLState {
+public class GLState implements Cloneable{
     private static String TAG = "GLState";
     private float currentLineWidth = 0f;
 
@@ -64,6 +64,13 @@ public class GLState {
         this.currentClearColor = new Color(0,0,0);
         this.statesEnabled = new SparseBooleanArray();
     }
+
+
+    @Override
+    public GLState clone() throws CloneNotSupportedException{
+        throw new CloneNotSupportedException("cannot clone GLState");
+    }
+
     public void setupDefaultState(){
         this.clearDepth(1);
         this.enable(GLES20.GL_DEPTH_TEST);

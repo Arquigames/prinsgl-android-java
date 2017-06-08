@@ -53,4 +53,10 @@ public class GLStructUniform  implements IUniform{
     public void setUniforms(java.util.LinkedList<GLUniform> uniforms) {
         this.uniforms = uniforms;
     }
+
+
+    @Override
+    public GLStructUniform clone()throws CloneNotSupportedException{
+        throw new CloneNotSupportedException("cannot clone GLStructUniform");
+    }
 }

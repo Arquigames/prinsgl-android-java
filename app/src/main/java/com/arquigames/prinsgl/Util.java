@@ -25,6 +25,17 @@ public class Util {
         str+="]";
         return str;
     }
+    public static String  print(int[] elements){
+        String str = "[";
+        for(int i = 0; i<elements.length;i++){
+            str +=elements[i];
+            if(i<elements.length-1){
+                str +=",";
+            }
+        }
+        str+="]";
+        return str;
+    }
     public static String  print(short[] elements){
         String str = "[";
         for(int i = 0; i<elements.length;i++){

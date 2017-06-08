@@ -66,6 +66,11 @@ public class MultiMaterial implements IMaterial{
         this.visible = value;
     }
 
+    @Override
+    public IMaterial clone() throws CloneNotSupportedException {
+        throw new CloneNotSupportedException("cannot clone MultiMaterial");
+    }
+
     public void setId(int id) {
         this.id = id;
     }

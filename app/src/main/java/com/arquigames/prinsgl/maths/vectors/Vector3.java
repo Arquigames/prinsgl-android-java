@@ -13,7 +13,7 @@ import java.util.LinkedList;
 /**
  * Created by usuario on 26/06/2016.
  */
-public class Vector3 {
+public class Vector3 implements  Cloneable {
 
     private float x = 0;
     private float y = 0;
@@ -81,6 +81,7 @@ public class Vector3 {
         }
 
     }
+    @Override
     public Vector3 clone(){
         return new Vector3(this.x,this.y,this.z);
     }

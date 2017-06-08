@@ -8,7 +8,7 @@ import com.arquigames.prinsgl.maths.vectors.Vector3;
 /**
  * Created by usuario on 26/06/2016.
  */
-public class Matrix4 {
+public class Matrix4 implements Cloneable{
 
     private float[] elements = new float[]{
             1.0f, 0.0f, 0.0f, 0.0f,
@@ -73,6 +73,7 @@ public class Matrix4 {
         );
         return this;
     }
+    @Override
     public Matrix4 clone(){
         return new Matrix4(this.elements);
     }

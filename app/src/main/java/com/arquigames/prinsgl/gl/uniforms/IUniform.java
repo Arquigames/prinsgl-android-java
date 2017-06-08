@@ -3,7 +3,7 @@ package com.arquigames.prinsgl.gl.uniforms;
 /**
  * Created by usuario on 12/07/2016.
  */
-public interface IUniform {
+public interface IUniform extends Cloneable {
 
     String U_1I = "1i";
     String U_F = "1f";
@@ -36,5 +36,6 @@ public interface IUniform {
     String getName();
     void setName(String name);
     void dispose();
+    IUniform clone() throws CloneNotSupportedException;
 }
 

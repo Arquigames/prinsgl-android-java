@@ -71,6 +71,11 @@ public class GLIndexedBufferRenderer implements IBufferRenderer {
     }
 
     @Override
+    public GLIndexedBufferRenderer clone() throws CloneNotSupportedException {
+        throw new CloneNotSupportedException("cannot clone GLIndexedBufferRenderer");
+    }
+
+    @Override
     public void setMode(int mode) {
         if(GLRenderer.DEBUG) Log.e(TAG,"setMode = "+mode);
         this.mode = mode;
@@ -79,6 +84,7 @@ public class GLIndexedBufferRenderer implements IBufferRenderer {
     public int getType() {
         return type;
     }
+
 
     public void setType(int type) {
         this.type = type;

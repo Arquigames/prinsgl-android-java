@@ -3,7 +3,7 @@ package com.arquigames.prinsgl.maths.vectors;
 /**
  * Created by usuario on 12/08/2016.
  */
-public class Vector2I {
+public class Vector2I implements  Cloneable{
     private int x;
     private int y;
     public Vector2I(int x, int y){
@@ -28,5 +28,10 @@ public class Vector2I {
     }
     public String toString(){
         return "Vector2I(x="+this.x+",y="+this.y+")";
+    }
+
+    @Override
+    public Vector2I clone(){
+        return new Vector2I(this.x,this.y);
     }
 }
